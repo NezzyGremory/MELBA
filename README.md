@@ -88,7 +88,7 @@ MELBA standardizes input columns, adds each standardized feature's square and pa
 
 This is a quadratic feature regression model trained with a standard robust loss and gradient descent. The expanded design can grow quadratically with the number of input columns. The model assumes numeric tabular inputs and does not provide categorical encoding, missing-value imputation, feature selection, time-series handling, uncertainty intervals, or causal estimates. R-squared on a constant target is defined as 1 for exact predictions and 0 otherwise.
 
-See [docs/algorithm.md](docs/algorithm.md) for the objective and training details. See [docs/framework.md](docs/framework.md) for package boundaries and API behavior.
+See the [algorithm documentation](https://github.com/NezzyGremory/MELBA/blob/main/docs/algorithm.md) for the objective and training details. See the [framework documentation](https://github.com/NezzyGremory/MELBA/blob/main/docs/framework.md) for package boundaries and API behavior.
 
 ## Development status
 
