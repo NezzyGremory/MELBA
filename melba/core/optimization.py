@@ -26,8 +26,6 @@ def optimize_huber(
     """
     sample_count, feature_count = design.shape
     augmented = np.column_stack((np.ones(sample_count), design))
-    regularized = np.ones(feature_count + 1)
-    regularized[0] = 0.0
 
     generator = np.random.default_rng(random_state)
     weights = np.zeros(feature_count + 1)

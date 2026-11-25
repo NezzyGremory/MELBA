@@ -42,6 +42,8 @@ Prediction applies training-time feature and target scales. `evaluate` reports m
 
 For a constant target, MELBA returns `R² = 1` when predictions exactly match it and `R² = 0` otherwise. This avoids division by zero and follows a common finite-score convention.
 
+The evaluation metrics scale inputs before subtraction when a direct difference would overflow, and scale residuals before squaring. If the final MAE, MSE, RMSE, or R² value is outside the finite `float64` range, the metric raises `OverflowError` instead of returning infinity. RMSE is computed directly so it can remain available when MSE itself is too large to represent.
+
 ## Assumptions and limitations
 
 Features and targets must be finite real numeric values. MELBA does not impute missing observations, encode categories, or select features. Quadratic expansion uses O(p²) terms, so it is best suited to datasets with a modest number of columns. Standardization improves numerical conditioning but does not remove the need to inspect units, outliers, data leakage, and train/test separation. Performance must be measured on data that was not used to fit the model.
