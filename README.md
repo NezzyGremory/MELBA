@@ -70,7 +70,7 @@ Run the test suite:
 python -m pytest
 ```
 
-Open `notebooks/MELBA_demo.ipynb` in Google Colab or Jupyter for a synthetic dataset walkthrough. The notebook contains a source snapshot so it can bootstrap its own MELBA import when opened without a project checkout.
+Open `notebooks/MELBA_demo.ipynb` in Google Colab or Jupyter for a synthetic dataset walkthrough. The notebook contains a source snapshot so it can bootstrap its own MELBA import when opened without a project checkout. The notebook code was exercised locally, but this project has not been run in a live Colab session.
 
 ## Project layout
 
