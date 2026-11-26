@@ -73,10 +73,12 @@ namespace = {"__name__": "__main__"}
 exec(compile(bootstrap, str(notebook_path), "exec"), namespace)
 import melba
 from melba import MELBA
+from melba.economics import DemandFunction
 assert Path(namespace["source_root"]).resolve() in Path(melba.__file__).resolve().parents
 assert (Path(namespace["source_root"]) / "melba" / "model.py").is_file()
 model = MELBA(epochs=5, random_state=13).fit([[0.0], [1.0], [2.0], [3.0]], [1.0, 2.0, 3.0, 4.0])
 assert model.predict([[4.0]]).shape == (1,)
+assert DemandFunction(a=10, b=1).calculate(2) == 8
 '''
         result = subprocess.run(
             [sys.executable, "-c", runner, str(NOTEBOOK_PATH), temporary_root],

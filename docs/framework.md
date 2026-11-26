@@ -12,6 +12,7 @@ MELBA 0.1.0 is a Python library for numeric business-data regression. It support
 - `melba/core/optimization.py` runs full-batch gradient descent.
 - `melba/utils/preprocessing.py` fits and applies feature scaling and quadratic expansion.
 - `melba/evaluation/metrics.py` implements MAE, MSE, RMSE, and R-squared.
+- `melba/economics/` implements linear economic functions, polynomial derivatives, bounded profit optimization, and price elasticity. These formulas are independent of the MELBA estimator and optimizer.
 - `examples/` contains runnable synthetic examples.
 - `tests/` checks estimator behavior, input validation, and metrics.
 
@@ -44,3 +45,5 @@ The project is packaged with `pyproject.toml` and setuptools. Install from a che
 ## Known limits
 
 The quadratic expansion creates O(p²) terms for p input columns, so this release is intended for modest feature counts. Inputs must already be numeric and complete. The model makes no causal claim and offers no built-in feature selection, cross-validation, or uncertainty estimates. Evaluation scores describe only the supplied sample.
+
+The economics functions calculate only the relationships and parameters supplied by the caller. Profit optimization is bounded by a finite quantity interval, and elasticity describes a mathematical function rather than a causal effect. See [Economic Mathematics](economics.md) for formulas, API details, assumptions, and examples.

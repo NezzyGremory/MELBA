@@ -1,6 +1,6 @@
 # MELBA
 
-MELBA (Mathematical Economics Learning-Based Algorithm) is an independent Python library for regression on business data. Version 0.1.0 gives users a small NumPy-based model with an estimator API for fitting, prediction, and evaluation.
+MELBA (Mathematical Economics Learning-Based Algorithm) is an independent Python library for regression on business data and formula-based economic mathematics. Version 0.1.0 provides a small NumPy-based estimator and a separate economics toolkit.
 
 ## Purpose
 
@@ -75,9 +75,9 @@ Open `notebooks/MELBA_demo.ipynb` in Google Colab or Jupyter for a synthetic dat
 ## Project layout
 
 ```text
-melba/       public estimator, validation, optimization, metrics, preprocessing
-examples/    basic NumPy and synthetic business-sales examples
-tests/       model, prediction, validation, and metric tests
+melba/       estimator, economics, validation, optimization, metrics, preprocessing
+examples/    regression, synthetic business-sales, and economics examples
+tests/       estimator, economics, validation, preprocessing, and metric tests
 notebooks/   self-contained demonstration notebook
 docs/        architecture and algorithm notes
 ```
@@ -90,6 +90,10 @@ This is a quadratic feature regression model trained with a standard robust loss
 
 See the [algorithm documentation](https://github.com/NezzyGremory/MELBA/blob/main/docs/algorithm.md) for the objective and training details. See the [framework documentation](https://github.com/NezzyGremory/MELBA/blob/main/docs/framework.md) for package boundaries and API behavior.
 
+## Economic mathematics
+
+The `melba.economics` package provides linear demand, supply, cost, revenue, and profit functions; analytical polynomial derivatives; bounded profit optimization; and price elasticity calculations. These calculations remain separate from the regression optimizer and require users to supply their own economic parameters and assumptions. See the [Economic Mathematics guide](docs/economics.md) and run `python examples/economic_functions.py` for a complete example.
+
 ## Development status
 
-Version 0.1.0 is an initial regression foundation for experimentation. It is not a validated domain model and should be assessed on held-out data before use in business decisions. No claim of algorithmic novelty is made.
+Version 0.1.0 is an initial regression foundation with a separate formula-based economics toolkit. Neither is a validated domain model: assess predictions on held-out data and supply appropriate economic assumptions before using results in business decisions. No claim of algorithmic novelty is made.

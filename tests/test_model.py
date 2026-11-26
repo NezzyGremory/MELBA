@@ -79,3 +79,8 @@ def test_fit_accepts_single_column_target():
 def test_invalid_configuration_raises_clear_error(kwargs):
     with pytest.raises(ValueError):
         MELBA(**kwargs)
+
+
+def test_negative_random_state_is_rejected_during_initialization():
+    with pytest.raises(ValueError, match="non-negative integer"):
+        MELBA(random_state=-1)

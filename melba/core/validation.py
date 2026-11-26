@@ -84,6 +84,9 @@ def validate_random_state(value: object) -> int | None:
     if value is None:
         return None
     if isinstance(value, bool) or not isinstance(value, Integral):
-        raise ValueError("random_state must be an integer or None.")
-    return int(value)
+        raise ValueError("random_state must be a non-negative integer or None.")
+    normalized = int(value)
+    if normalized < 0:
+        raise ValueError("random_state must be a non-negative integer or None.")
+    return normalized
 
