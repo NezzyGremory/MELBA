@@ -1,37 +1,58 @@
-# MELBA
+# MELBA 0.2.0
 
-MELBA (Mathematical Economics Learning-Based Algorithm) is an independent Python library for regression on business data and formula-based economic mathematics. Version 0.1.0 provides a small NumPy-based estimator and a separate economics toolkit.
+MELBA (Mathematical Economics Learning-Based Algorithm) is a Python library for business-data regression and formula-based economic mathematics. Version 0.2.0 combines the original Regression Engine with a separate Economic Mathematics Engine.
 
-## Purpose
+This source tree prepares version 0.2.0. Until that version is published, installing from PyPI will still install the latest published version.
 
-MELBA provides an inspectable starting point for studying relationships among business variables such as price, promotion spend, operating cost, and sales. Its first implementation uses familiar regression methods. It does not claim a new machine-learning method or established scientific novelty.
+## Features
 
-## Version 0.1.0
+### Regression Engine
 
-- `MELBA.fit(X, y)` validates data and trains the model.
-- `MELBA.predict(X)` predicts numeric targets after training.
-- `MELBA.evaluate(X, y)` returns MAE, MSE, RMSE, and R-squared.
-- Training uses quadratic feature terms by default, Huber loss, L2 regularization, and full-batch gradient descent.
-- Inputs may be NumPy arrays or Pandas objects. Features must be finite numeric values.
-- A reproducible synthetic sales example and a Colab-ready demonstration notebook are included.
+- Familiar estimator API: MELBA.fit(X, y), predict(X), and evaluate(X, y).
+- Numeric NumPy arrays and Pandas DataFrame/Series inputs.
+- Standardized features, optional quadratic and pairwise feature expansion, Huber loss, L2 regularization, and full-batch gradient descent.
+- Evaluation metrics: MAE, MSE, RMSE, and R-squared.
+- Reproducible initialization through random_state.
 
-## Install
+The model uses established regression techniques. MELBA makes no claim of algorithmic novelty or scientific superiority.
 
-PyPI availability and release status have not been verified in this environment. Install from a local checkout:
+### Economic Mathematics Engine
 
-```bash
-python -m pip install -e .
-```
+Import functions from melba.economics:
 
-For optional plotting and tests:
+- DemandFunction and SupplyFunction for linear demand and supply.
+- CostFunction, RevenueFunction, and ProfitFunction for total cost, revenue, and profit.
+- PolynomialFunction and analytical derivatives for marginal cost, marginal revenue, and marginal profit.
+- Bounded profit optimization that checks stationary candidates and interval boundaries.
+- Point price elasticity with elastic, inelastic, or unitary elastic interpretation.
 
-```bash
-python -m pip install -e ".[plot,test]"
-```
+The economic functions use parameters supplied by the caller. They are separate from the regression optimizer and do not infer causal relationships.
 
-## Quick start
+## Installation
 
-```python
+After MELBA 0.2.0 is published to PyPI:
+
+~~~bash
+python -m pip install --upgrade melba
+~~~
+
+To install this source checkout before publication:
+
+~~~bash
+python -m pip install .
+~~~
+
+Matplotlib is optional and only needed for plotting in the notebook. For tests and plotting:
+
+~~~bash
+python -m pip install ".[plot,test]"
+~~~
+
+## Quick Start
+
+The example below uses synthetic demonstration values. It trains a regression model, predicts sales, and passes the prediction into the economic functions.
+
+~~~python
 import numpy as np
 from melba import MELBA
 from melba.economics import (
@@ -40,6 +61,7 @@ from melba.economics import (
     Elasticity,
     ProfitFunction,
     RevenueFunction,
+    SupplyFunction,
 )
 
 # Synthetic demonstration data: promotion budget in thousands -> units sold.
@@ -53,13 +75,14 @@ model = MELBA(
     l2_penalty=0.0,
 )
 model.fit(X_train, y_train)
+
 predicted_sales = float(model.predict([[25]])[0])
 evaluation = model.evaluate(X_train, y_train)
 
 if predicted_sales < 0:
     raise ValueError("Predicted sales are outside the non-negative quantity domain.")
 
-# Illustrative currency assumptions, all per product unit where applicable.
+# Illustrative currency values per product unit.
 price_per_unit = 10_000.0
 revenue = RevenueFunction().calculate(price_per_unit, predicted_sales)
 total_cost = CostFunction(
@@ -68,62 +91,66 @@ total_cost = CostFunction(
 ).calculate(predicted_sales)
 profit = ProfitFunction().calculate(revenue, total_cost)
 
-# This separate synthetic demand curve demonstrates point price elasticity.
-demand = DemandFunction(a=100.0, b=0.005)
-elasticity = Elasticity.price_demand(demand, price=10_000.0)
+# Separate illustrative supply and demand curves.
+demand = DemandFunction(a=1_000.0, b=0.05)
+supply = SupplyFunction(c=20.0, d=0.02)
+demand_quantity = demand.calculate(price_per_unit)
+supply_quantity = supply.calculate(price_per_unit)
+elasticity = Elasticity.price_demand(demand, price=price_per_unit)
 
 print("Predicted sales:", predicted_sales)
 print("Evaluation:", evaluation)
 print("Revenue / cost / profit:", revenue, total_cost, profit)
+print("Demand / supply:", demand_quantity, supply_quantity)
 print("Price elasticity:", elasticity.elasticity, elasticity.category)
-```
+~~~
 
-All values are synthetic and illustrative, not company data. The demand curve is separate from the fitted regression; neither example makes a real-world accuracy or causal claim. MELBA does not constrain regression predictions to non-negative quantities, so the example checks the economic input domain before calculating revenue and cost.
+All data and currency values are synthetic and illustrative; they are not company observations or evidence of real-world accuracy. The demand and supply curves are separate from the fitted regression. Predictions are not constrained to non-negative values, so check the quantity domain before using predictions in economic calculations.
 
-## Examples and tests
+## Main Formulas
 
-Run an end-to-end NumPy example:
+For price P and quantity Q, the linear functions use:
 
-```bash
+- Demand: Qd(P) = a - bP
+- Supply: Qs(P) = c + dP
+- Total cost: TC(Q) = FC + vQ
+- Total revenue: TR(P, Q) = P × Q
+- Profit: π(Q) = TR(Q) - TC(Q)
+- Marginal values: MC(Q) = TC′(Q), MR(Q) = TR′(Q), and MP(Q) = π′(Q)
+- Point price elasticity: E(P) = (dQ/dP) × (P/Q)
+
+For polynomial cost, revenue, or profit functions, MELBA calculates derivatives analytically. Profit optimization searches a finite quantity interval, evaluates real stationary points in that interval, and compares them with both endpoints. A zero first derivative alone is not treated as proof of a maximum.
+
+The regression objective uses Huber loss on standardized targets with an L2 penalty on non-intercept coefficients. See the algorithm guide and Economic Mathematics guide for assumptions and details.
+
+## Google Colab
+
+Open the self-contained synthetic walkthrough in [Google Colab](https://colab.research.google.com/github/NezzyGremory/MELBA/blob/main/notebooks/MELBA_demo.ipynb). The notebook bundles a source snapshot so its regression and economics examples can run without a local repository checkout. Notebook results describe only the generated demonstration data.
+
+## Examples and Tests
+
+Run examples from a source checkout:
+
+~~~bash
 python examples/basic_usage.py
-```
-
-Run the synthetic sales example:
-
-```bash
 python examples/business_sales.py
-```
+python examples/economic_functions.py
+~~~
 
-Run the test suite:
+Run the unit test suite:
 
-```bash
+~~~bash
 python -m pytest
-```
+~~~
 
-Open `notebooks/MELBA_demo.ipynb` in Google Colab or Jupyter for a synthetic dataset walkthrough. The notebook contains a source snapshot so it can bootstrap its own MELBA import when opened without a project checkout. The notebook code was exercised locally, but this project has not been run in a live Colab session.
+## Limitations
 
-## Project layout
+- Inputs must be finite numeric data; MELBA does not encode categories or impute missing values.
+- The default quadratic feature expansion creates O(p²) terms for p input columns, so large feature sets can require substantial memory and computation.
+- Evaluation scores describe only the supplied sample. Use a held-out dataset to assess predictive performance.
+- The estimator does not provide causal estimates, time-series handling, feature selection, uncertainty intervals, or non-negative prediction constraints.
+- Economic parameters and units are supplied by the caller. The cost function is linear unless a polynomial is provided.
+- Profit optimization is bounded by the finite interval passed to the function; it does not claim an optimum outside those bounds.
+- Elasticity describes the supplied mathematical demand function and does not establish a causal price effect.
 
-```text
-melba/       estimator, economics, validation, optimization, metrics, preprocessing
-examples/    regression, synthetic business-sales, and economics examples
-tests/       estimator, economics, validation, preprocessing, and metric tests
-notebooks/   self-contained demonstration notebook
-docs/        architecture and algorithm notes
-```
-
-## Algorithm and limitations
-
-MELBA standardizes input columns, adds each standardized feature's square and pairwise products by default, then standardizes the expanded columns. It standardizes the target for optimization, minimizes Huber loss plus an L2 penalty on non-intercept coefficients, and converts predictions back to the target's original scale.
-
-This is a quadratic feature regression model trained with a standard robust loss and gradient descent. The expanded design can grow quadratically with the number of input columns. The model assumes numeric tabular inputs and does not provide categorical encoding, missing-value imputation, feature selection, time-series handling, uncertainty intervals, or causal estimates. R-squared on a constant target is defined as 1 for exact predictions and 0 otherwise.
-
-See the [algorithm documentation](https://github.com/NezzyGremory/MELBA/blob/main/docs/algorithm.md) for the objective and training details. See the [framework documentation](https://github.com/NezzyGremory/MELBA/blob/main/docs/framework.md) for package boundaries and API behavior.
-
-## Economic mathematics
-
-The `melba.economics` package provides linear demand, supply, cost, revenue, and profit functions; analytical polynomial derivatives; bounded profit optimization; and price elasticity calculations. These calculations remain separate from the regression optimizer and require users to supply their own economic parameters and assumptions. See the [Economic Mathematics guide](docs/economics.md) and run `python examples/economic_functions.py` for a complete example.
-
-## Development status
-
-Version 0.1.0 is an initial regression foundation with a separate formula-based economics toolkit. Neither is a validated domain model: assess predictions on held-out data and supply appropriate economic assumptions before using results in business decisions. No claim of algorithmic novelty is made.
+MELBA is an inspectable learning and calculation tool, not a validated domain model for making business decisions. See the [framework guide](docs/framework.md), [algorithm guide](docs/algorithm.md), and [Economic Mathematics guide](docs/economics.md).

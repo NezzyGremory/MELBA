@@ -1,4 +1,4 @@
-# MELBA 0.1.0 algorithm
+# MELBA 0.2.0 algorithm
 
 ## Model form
 

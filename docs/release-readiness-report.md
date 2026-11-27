@@ -1,7 +1,9 @@
-# MELBA Final Release Blocker Audit
+# MELBA Release Readiness Report — Historical v0.1.0 Audit
 
-**Diperbarui:** 27 November 2026 | **Versi source dan distribusi:** 0.1.0
-**Keputusan:** **NOT READY FOR PYPI RELEASE** | **Upload:** tidak dilakukan ke PyPI atau TestPyPI.
+**Snapshot audit:** 27 November 2026 | **Versi yang diaudit:** 0.1.0
+**Keputusan saat snapshot:** **NOT READY FOR PYPI RELEASE** | **Upload:** tidak dilakukan.
+
+Dokumen ini mempertahankan hasil audit pra-rilis 0.1.0. Pernyataan jaringan dan status PyPI pada bagian historis di bawah menggambarkan environment dan waktu audit tersebut, bukan status 0.2.0 saat ini. Pemeriksaan resmi PyPI yang lebih baru dicatat di bagian paling akhir.
 
 ## 1. Ringkasan status
 
@@ -114,3 +116,35 @@ Dependency tidak diubah, versi package tetap 0.1.0, dan algoritma/model tidak di
 # NOT READY FOR PYPI RELEASE
 
 Unit tests, twine check, inspeksi artefak, dan smoke test wheel lokal lulus. Publikasi belum siap karena clean online install serta status PyPI/TestPyPI belum dapat diverifikasi akibat blokir jaringan; Python minimum 3.10 belum diuji; dan metadata maintainer masih menunggu informasi pemilik. Tidak ada package yang diunggah.
+
+## Pemeriksaan PyPI resmi terbaru untuk persiapan 0.2.0
+
+Pemeriksaan PyPI JSON API pada 27 November 2026 mengonfirmasi project bernama melba, metadata dan tautan repositori yang cocok dengan package ini, serta satu rilis yang sudah dipublikasikan: 0.1.0. Rilis 0.2.0 belum tercantum. Kedua artefak 0.1.0 tetap terdaftar. Pemeriksaan ini hanya membaca metadata resmi dan tidak mengunggah package.
+
+Sumber: [PyPI project JSON API](https://pypi.org/pypi/melba/json) dan [halaman proyek MELBA](https://pypi.org/project/melba/).
+
+## Verifikasi persiapan rilis 0.2.0
+
+**Pemeriksaan dilakukan:** 27 November 2026. Status di bawah merupakan hasil pra-publikasi; tidak ada file yang diunggah.
+
+| Pemeriksaan | Status | Hasil |
+|---|---|---|
+| Metadata versi | PASS | `pyproject.toml`, `melba.__version__`, README, dokumentasi algoritma/framework, dan notebook menandai 0.2.0. Referensi 0.1.0 yang tersisa ada di laporan audit historis. |
+| Suite tes | PASS | `python -m pytest`: 91 passed pada Python 3.12.10. |
+| Build distribusi | PASS | `python -m build` berhasil untuk wheel dan sdist. Build terisolasi berhasil di staging; artefak final `dist/` dibuat ulang dengan `--no-isolation` memakai setuptools 84.0.0 yang tersedia. Lingkungan build Python 3.13.12. |
+| Twine check | PASS | Wheel dan sdist 0.2.0 keduanya lulus `python -m twine check`. |
+| Pemeriksaan isi distribusi | PASS | `dist/` hanya memuat wheel dan sdist 0.2.0. Lima modul ekonomi ada di kedua arsip. Pemindaian terarah tidak menemukan nama file credential, pola secret umum, atau path lokal/absolut. |
+| Clean install | PASS | Wheel terbaru dipasang ke venv Python 3.12.10 tanpa system site-packages. NumPy dan Pandas dipasang dari PyPI resmi; `pip check`, impor seluruh 14 submodul, smoke test API, dan Quick Start lulus. |
+| Demonstrasi notebook | PASS | Bootstrap dan seluruh sel non-plot berhasil dieksekusi. Sel visualisasi tidak dijalankan lokal karena Matplotlib opsional tidak terpasang; notebook memasang dependency itu untuk Colab. |
+| Status PyPI resmi | PASS | JSON API resmi mengidentifikasi project `melba`, mencantumkan rilis 0.1.0 dengan wheel dan sdist, dan tidak mencantumkan 0.2.0 saat diperiksa. Periksa ulang tepat sebelum upload karena status dapat berubah. |
+
+Metadata maintainer/kontak belum diberikan dan tidak diisi dengan informasi rekaan. Field tersebut tidak diperlukan untuk menjalankan pemeriksaan distribusi yang dicatat di atas.
+
+### Artefak yang disiapkan
+
+| Artefak | Ukuran | SHA-256 |
+|---|---:|---|
+| `dist/melba-0.2.0-py3-none-any.whl` | 20,483 bytes | `1f8baeec21c92dc7e6593fcf7c3adab3cb60f07af198ca6d74d9525b756784d1` |
+| `dist/melba-0.2.0.tar.gz` | 41,058 bytes | `06e152dcfaeb995ed17c7296d356aa5f789a3f33d3d1a66142f17d4ab96528bb` |
+
+**Kesimpulan pra-publikasi: READY FOR PYPI RELEASE.** Ini menyatakan pemeriksaan lokal dan status PyPI saat diperiksa sudah memenuhi gerbang persiapan; publikasi tetap menunggu konfirmasi pengguna. Rilis 0.1.0 tidak diubah atau dihapus.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-MELBA 0.1.0 is a Python library for numeric business-data regression. It supports model fitting, prediction, and evaluation in notebooks or Python scripts. It has no server or database component.
+MELBA 0.2.0 is a Python library for numeric business-data regression and formula-based economic mathematics. It supports model fitting, prediction, and evaluation in notebooks or Python scripts, with a separate economic functions package. It has no server or database component.
 
 ## Package layout
 
