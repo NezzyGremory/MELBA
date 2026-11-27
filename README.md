@@ -17,7 +17,7 @@ MELBA provides an inspectable starting point for studying relationships among bu
 
 ## Install
 
-From a checkout of this project:
+PyPI availability and release status have not been verified in this environment. Install from a local checkout:
 
 ```bash
 python -m pip install -e .
@@ -34,21 +34,51 @@ python -m pip install -e ".[plot,test]"
 ```python
 import numpy as np
 from melba import MELBA
+from melba.economics import (
+    CostFunction,
+    DemandFunction,
+    Elasticity,
+    ProfitFunction,
+    RevenueFunction,
+)
 
-X_train = np.array([[20, 100], [25, 140], [30, 180], [35, 210]], dtype=float)
-y_train = np.array([120, 155, 190, 215], dtype=float)
-X_test = np.array([[28, 165]], dtype=float)
+# Synthetic demonstration data: promotion budget in thousands -> units sold.
+X_train = np.array([[0], [10], [20], [30], [40], [50]], dtype=float)
+y_train = np.array([50, 70, 90, 110, 130, 150], dtype=float)
 
-model = MELBA(learning_rate=0.5, epochs=1000, random_state=42)
+model = MELBA(
+    quadratic_terms=False,
+    epochs=1000,
+    random_state=42,
+    l2_penalty=0.0,
+)
 model.fit(X_train, y_train)
+predicted_sales = float(model.predict([[25]])[0])
+evaluation = model.evaluate(X_train, y_train)
 
-predictions = model.predict(X_test)
-results = model.evaluate(X_test, [175])
-print(predictions)
-print(results)
+if predicted_sales < 0:
+    raise ValueError("Predicted sales are outside the non-negative quantity domain.")
+
+# Illustrative currency assumptions, all per product unit where applicable.
+price_per_unit = 10_000.0
+revenue = RevenueFunction().calculate(price_per_unit, predicted_sales)
+total_cost = CostFunction(
+    fixed_cost=100_000.0,
+    variable_cost=6_000.0,
+).calculate(predicted_sales)
+profit = ProfitFunction().calculate(revenue, total_cost)
+
+# This separate synthetic demand curve demonstrates point price elasticity.
+demand = DemandFunction(a=100.0, b=0.005)
+elasticity = Elasticity.price_demand(demand, price=10_000.0)
+
+print("Predicted sales:", predicted_sales)
+print("Evaluation:", evaluation)
+print("Revenue / cost / profit:", revenue, total_cost, profit)
+print("Price elasticity:", elasticity.elasticity, elasticity.category)
 ```
 
-The example's values are illustrative. They are not company data.
+All values are synthetic and illustrative, not company data. The demand curve is separate from the fitted regression; neither example makes a real-world accuracy or causal claim. MELBA does not constrain regression predictions to non-negative quantities, so the example checks the economic input domain before calculating revenue and cost.
 
 ## Examples and tests
 

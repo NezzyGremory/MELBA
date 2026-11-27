@@ -1,3 +1,8 @@
 include README.md
 include LICENSE
+include docs/algorithm.md
+include docs/economics.md
+include docs/framework.md
+include notebooks/MELBA_demo.ipynb
+recursive-include examples *.py
 prune tests
