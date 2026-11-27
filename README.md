@@ -1,8 +1,23 @@
-# MELBA 0.2.0
+<p align="center">
+  <img src="https://raw.githubusercontent.com/NezzyGremory/MELBA/main/assets/melba-logo.png" alt="MELBA geometric red logo" width="280">
+</p>
 
-MELBA (Mathematical Economics Learning-Based Algorithm) is a Python library for business-data regression and formula-based economic mathematics. Version 0.2.0 combines the original Regression Engine with a separate Economic Mathematics Engine.
+<h1 align="center">MELBA 0.2.0</h1>
 
-This source tree prepares version 0.2.0. Until that version is published, installing from PyPI will still install the latest published version.
+<p align="center">Business data regression and economic mathematics in Python.</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/melba/">PyPI project</a> ·
+  <a href="https://github.com/NezzyGremory/MELBA">Source repository</a>
+</p>
+
+<p align="center">
+  <a href="https://pypi.org/project/melba/"><img src="https://img.shields.io/pypi/v/melba" alt="PyPI version"></a>
+</p>
+
+MELBA (Mathematical Economics Learning-Based Algorithm) combines a regression engine with a separate economic mathematics toolkit. The 0.2.0 source adds linear economic functions, analytical derivatives, bounded profit optimization, and price elasticity analysis.
+
+> **PyPI status:** Version 0.1.0 is currently published. Version 0.2.0 is not yet available from PyPI. The `pip install melba` command below installs the latest published version; install this 0.2.0 source checkout to use the new economics modules before publication.
 
 ## Features
 
@@ -30,13 +45,19 @@ The economic functions use parameters supplied by the caller. They are separate 
 
 ## Installation
 
-After MELBA 0.2.0 is published to PyPI:
+Install the latest published release from [PyPI](https://pypi.org/project/melba/):
+
+~~~bash
+pip install melba
+~~~
+
+Or use the Python module form:
 
 ~~~bash
 python -m pip install --upgrade melba
 ~~~
 
-To install this source checkout before publication:
+To use the 0.2.0 code from a local source checkout:
 
 ~~~bash
 python -m pip install .
@@ -114,9 +135,9 @@ For price P and quantity Q, the linear functions use:
 - Demand: Qd(P) = a - bP
 - Supply: Qs(P) = c + dP
 - Total cost: TC(Q) = FC + vQ
-- Total revenue: TR(P, Q) = P × Q
-- Profit: π(Q) = TR(Q) - TC(Q)
-- Marginal values: MC(Q) = TC′(Q), MR(Q) = TR′(Q), and MP(Q) = π′(Q)
+- Total revenue: TR(P, Q) = P * Q
+- Profit: Profit(Q) = TR(Q) - TC(Q)
+- Marginal values: MC(Q) = dTC/dQ, MR(Q) = dTR/dQ, and MP(Q) = dProfit/dQ
 - Point price elasticity: E(P) = (dQ/dP) × (P/Q)
 
 For polynomial cost, revenue, or profit functions, MELBA calculates derivatives analytically. Profit optimization searches a finite quantity interval, evaluates real stationary points in that interval, and compares them with both endpoints. A zero first derivative alone is not treated as proof of a maximum.

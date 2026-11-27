@@ -148,3 +148,9 @@ Metadata maintainer/kontak belum diberikan dan tidak diisi dengan informasi reka
 | `dist/melba-0.2.0.tar.gz` | 41,058 bytes | `06e152dcfaeb995ed17c7296d356aa5f789a3f33d3d1a66142f17d4ab96528bb` |
 
 **Kesimpulan pra-publikasi: READY FOR PYPI RELEASE.** Ini menyatakan pemeriksaan lokal dan status PyPI saat diperiksa sudah memenuhi gerbang persiapan; publikasi tetap menunggu konfirmasi pengguna. Rilis 0.1.0 tidak diubah atau dihapus.
+
+## Pembaruan setelah percobaan upload
+
+Pada 27 November 2026, percobaan upload manual dengan Twine menerima HTTP 403 Forbidden. Ini bukan bukti publikasi berhasil. Pemeriksaan PyPI sesudahnya masih hanya menampilkan 0.1.0; endpoint rilis 0.2.0 mengembalikan 404. Kedua distribusi 0.2.0 tetap disiapkan secara lokal, dan tidak ada upload ulang yang dijalankan.
+
+Penyebab 403 belum dapat dipastikan dari output singkat tersebut. Periksa token PyPI (token resmi PyPI, termasuk prefix `pypi-`, belum dicabut, tidak ada whitespace), username `__token__`, scope token untuk project `melba` atau seluruh akun, dan hak upload akun. Peringatan Trusted Publishing menyatakan lingkungan bukan OIDC publisher; untuk upload manual gunakan API token. Jangan kirim token melalui chat atau log.
